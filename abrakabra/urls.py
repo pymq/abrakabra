@@ -16,9 +16,10 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 from rest_framework.documentation import include_docs_urls
-
+from django.shortcuts import render
 
 urlpatterns = [
+    url(r'^$',lambda req: render(req, 'grishanya.html') ),
     url(r'^admin/', admin.site.urls),
     url(r'^api/', include('api.urls')),
     url(r'^docs/', include_docs_urls(title='Grishanya API')),
