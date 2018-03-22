@@ -1,7 +1,8 @@
 coreapi
-Django==1.11
+Django==1.11.11
 djangorestframework==3.7.7
 Markdown
 Pygments
 dj-database-url
 python-decouple
+drf-extensions

@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-
 STATE_CHOICES = (
     ('o', 'open'),
     ('c', 'closed'),
@@ -20,7 +19,6 @@ PRIORITY_CHOICES = (
 )
 
 
-
 class Ticket(models.Model):
     title = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -28,7 +26,11 @@ class Ticket(models.Model):
     type = models.CharField(choices=TYPE_CHOICES, default='common', max_length=40)  # TODO choices
     priority = models.CharField(choices=PRIORITY_CHOICES, default='0', max_length=2)
     owner = models.ForeignKey(User, related_name='tickets', on_delete=models.CASCADE)
-    responsible = models.ForeignKey(User, related_name='tickets_responsible_for', on_delete=models.SET_NULL, null=True, default=None)  # TODO user groups
+    responsible = models.ForeignKey(User, related_name='tickets_responsible_for',
+                                    on_delete=models.SET_NULL, null=True, default=None)  # TODO user groups
+
+    def __str__(self):
+        return self.title
 
 
 class Article(models.Model):
@@ -37,3 +39,6 @@ class Article(models.Model):
     message = models.TextField(max_length=4000)
     owner = models.ForeignKey(User, related_name='articles', on_delete=models.CASCADE)
     ticket = models.ForeignKey(Ticket, related_name='articles', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.subject

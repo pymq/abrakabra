@@ -1,12 +1,13 @@
-from rest_framework import viewsets
+from rest_framework import mixins, generics, status, viewsets
 from django.contrib.auth.models import User
-from .serializers import TicketSerializer, UserSerializer, ArticleSerializer
+from .serializers import HyperlinkedTicketSerializer, UserSerializer, HyperlinkedArticleSerializer
 from .permissions import IsOwner
 from rest_framework import permissions
 from rest_framework.response import Response
+from rest_framework.decorators import detail_route, api_view
 from .models import Ticket, Article
-from rest_framework.decorators import detail_route
 
+from rest_framework_extensions.mixins import NestedViewSetMixin
 
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
@@ -17,40 +18,22 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = UserSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
-    # @detail_route(methods=['post'])
-    # def set_password(self, request, pk=None):
-    #     user = self.get_object()
-    #     serializer = PasswordSerializer(data=request.data)
-    #     if serializer.is_valid():
-    #         user.set_password(serializer.data['password'])
-    #         user.save()
-    #         return Response({'status': 'password set'})
-    #     else:
-    #         return Response(serializer.errors,
-    #                         status=status.HTTP_400_BAD_REQUEST)
 
-class TicketViewSet(viewsets.ModelViewSet):
-    """
-    This viewset automatically provides `list`, `create`, `retrieve`,
-    `update` and `destroy` actions.
-    """
-    queryset = Ticket.objects.all()
-    serializer_class = TicketSerializer
-    permission_classes = (permissions.IsAuthenticated,
-                          IsOwner,)
-
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
-
-class ArticleViewSet(viewsets.ModelViewSet):
-    """
-    This viewset automatically provides `list`, `create`, `retrieve`,
-    `update` and `destroy` actions.
-    """
+class NestedArticleViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     queryset = Article.objects.all()
-    serializer_class = ArticleSerializer
+    serializer_class = HyperlinkedArticleSerializer
     permission_classes = (permissions.IsAuthenticated,
                           IsOwner,)
 
     def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+        serializer.save(owner=self.request.user, ticket=Ticket.objects.get(pk=self.kwargs['parent_lookup_ticket']))
+
+
+class NestedTicketViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
+    queryset = Ticket.objects.all()
+    serializer_class = HyperlinkedTicketSerializer
+    permission_classes = (permissions.IsAuthenticated,
+                          IsOwner,)
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user, )
