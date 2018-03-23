@@ -9,10 +9,12 @@ from rest_framework_extensions.routers import ExtendedSimpleRouter, NestedRouter
 schema_view = get_schema_view(title='Grishanya API')
 
 router = DefaultRouter()
+router.include_root_view = False
 router.register(r'users', views.UserViewSet)
 
 
 class NestedDefaultRouter(NestedRouterMixin, DefaultRouter):
+    include_root_view = False
     pass
 
 
@@ -28,5 +30,4 @@ urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'^', include(nested_router.urls)),
     url(r'^schema/$', schema_view),
-    url(r'^api/', include('rest_framework.urls')),
 ]

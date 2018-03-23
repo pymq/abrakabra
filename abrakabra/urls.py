@@ -21,7 +21,10 @@ from django.shortcuts import render
 urlpatterns = [
     url(r'^$', lambda req: render(req, 'index.html')),
     url(r'^admin/', admin.site.urls),
+    url(r'^api/auth/', include('rest_auth.urls')),
+    url(r'^api/auth/registration/', include('rest_auth.registration.urls')),
     url(r'^api/', include('api.urls')),
     url(r'^docs/', include_docs_urls(title='Grishanya API')),
+    url(r'^', include('rest_framework.urls')),
 
 ]
