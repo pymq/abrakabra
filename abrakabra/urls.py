@@ -26,6 +26,7 @@ schema_view = get_schema_view(
         title="Grishanya API",
         default_version='v1',
     ),
+    url=r"https://grishanya.ga",
     public=True,
     permission_classes=(permissions.AllowAny,),
 )
