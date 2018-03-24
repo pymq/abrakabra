@@ -7,3 +7,4 @@ dj-database-url
 python-decouple
 drf-extensions
 django-rest-auth[with_social]
+drf-yasg
