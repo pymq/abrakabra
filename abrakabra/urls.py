@@ -15,7 +15,6 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
-from rest_framework.documentation import include_docs_urls
 from django.shortcuts import render
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
@@ -37,9 +36,8 @@ urlpatterns = [
     url(r'^api/auth/', include('rest_auth.urls')),
     url(r'^api/auth/registration/', include('rest_auth.registration.urls')),
     url(r'^api/', include('api.urls')),
-    url(r'^docs/', include_docs_urls(title='Grishanya API')),
-    url(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=None), name='schema-json'),
-    url(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=None), name='schema-swagger-ui'),
+    url(r'^docs(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=None), name='schema-json'),
+    url(r'^docs/$', schema_view.with_ui('swagger', cache_timeout=None), name='schema-swagger-ui'),
     url(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=None), name='schema-redoc'),
     url(r'^', include('rest_framework.urls')),
 
