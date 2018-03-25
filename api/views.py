@@ -2,12 +2,13 @@ from rest_framework import mixins, generics, status, viewsets
 from django.contrib.auth.models import User
 from .serializers import HyperlinkedTicketSerializer, UserSerializer, HyperlinkedArticleSerializer
 from .permissions import IsOwner
-from rest_framework import permissions
+from rest_framework import permissions, filters
 from rest_framework.response import Response
 from rest_framework.decorators import detail_route, api_view
 from .models import Ticket, Article
 
 from rest_framework_extensions.mixins import NestedViewSetMixin
+from django_filters.rest_framework import DjangoFilterBackend
 
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
@@ -34,6 +35,12 @@ class NestedTicketViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     serializer_class = HyperlinkedTicketSerializer
     permission_classes = (permissions.IsAuthenticated,
                           IsOwner,)
+    filter_backends = (filters.OrderingFilter, DjangoFilterBackend)
+    search_fields = ('created_at', 'priority', 'title', 'type')
+    filter_fields = ('priority', 'state', 'type')
+
+    def get_queryset(self):
+        return self.request.user.tickets
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user, )

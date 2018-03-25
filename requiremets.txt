@@ -1,6 +1,6 @@
 coreapi
-Django==1.11.11
-djangorestframework==3.7.7
+Django>=1.11.0,<2.0
+djangorestframework
 Markdown
 Pygments
 dj-database-url
@@ -8,3 +8,4 @@ python-decouple
 drf-extensions
 django-rest-auth[with_social]
 drf-yasg
+django-filter
