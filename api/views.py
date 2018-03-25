@@ -36,8 +36,9 @@ class NestedTicketViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,
                           IsOwner,)
     filter_backends = (filters.OrderingFilter, DjangoFilterBackend)
-    search_fields = ('created_at', 'priority', 'title', 'type')
-    filter_fields = ('priority', 'state', 'type')
+    ordering_fields = ('created_at', 'priority', 'title', 'type')
+    ordering = ('-created_at',)
+    filter_fields = ('priority', 'state', 'type', 'owner__username')
 
     def get_queryset(self):
         return self.request.user.tickets
