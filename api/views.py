@@ -1,6 +1,7 @@
 from rest_framework import mixins, generics, status, viewsets
 from django.contrib.auth.models import User
-from .serializers import HyperlinkedTicketSerializer, UserSerializer, HyperlinkedArticleSerializer
+from .serializers import HyperlinkedTicketSerializer, UserSerializer, HyperlinkedArticleSerializer, \
+    CreateTicketSerializer
 from .permissions import IsOwner
 from rest_framework import permissions, filters
 from rest_framework.response import Response
@@ -29,7 +30,6 @@ class NestedArticleViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
 
 class NestedTicketViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     queryset = Ticket.objects.all()
-    serializer_class = HyperlinkedTicketSerializer
     permission_classes = (permissions.IsAuthenticated,
                           IsOwner,)
     filter_backends = (filters.OrderingFilter, DjangoFilterBackend)
@@ -39,6 +39,11 @@ class NestedTicketViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
 
     def get_queryset(self):
         return self.request.user.tickets
+
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return CreateTicketSerializer
+        return HyperlinkedTicketSerializer
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user, )

@@ -53,6 +53,22 @@ class HyperlinkedArticleSerializer(serializers.HyperlinkedModelSerializer):
         read_only_fields = ('id', 'owner', 'created_at', 'ticket')
 
 
+class CreateTicketSerializer(serializers.ModelSerializer):
+    article = HyperlinkedArticleSerializer(write_only=True)
+
+    class Meta:
+        model = Ticket
+        fields = ('title', 'state', 'type', 'priority',
+                  'responsible', 'article')
+
+    def create(self, validated_data):
+        article_data = validated_data.pop('article')
+        ticket = Ticket.objects.create(**validated_data)
+        Article.objects.create(owner=validated_data.get('owner'), ticket=ticket,
+                               **article_data)
+        return ticket
+
+
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
