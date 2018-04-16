@@ -1,60 +1,31 @@
 from rest_framework import serializers, fields
-from rest_framework.relations import Hyperlink
 from .models import Ticket, Article
 from django.contrib.auth.models import User
-from rest_framework.reverse import reverse
 
 
-class ArticleDetailHyperlink(serializers.HyperlinkedIdentityField):
-    view_name = 'tickets-article-detail'
-
-    def get_url(self, obj, view_name, request, format):
-        url_kwargs = {
-            'parent_lookup_ticket': obj.ticket.id,
-            'pk': obj.pk
-        }
-        return reverse(view_name, kwargs=url_kwargs, request=request, format=format)
-
-
-class ArticleHyperlinkedRelatedField(serializers.HyperlinkedRelatedField):
-    view_name = 'tickets-article-detail'
-
-    def get_url(self, obj, view_name, request, format):
-        if isinstance(obj, Ticket):
-            return Hyperlink('', obj)
-
-        kwargs = {
-            'parent_lookup_ticket': obj.ticket.id,
-            'pk': obj.id
-        }
-        return self.reverse(view_name, kwargs=kwargs, request=request, format=format)
-
-
-class HyperlinkedTicketSerializer(serializers.HyperlinkedModelSerializer):
+class TicketSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
-    articles = ArticleHyperlinkedRelatedField(view_name='tickets-article-detail', many=True, read_only=True)
 
     class Meta:
         model = Ticket
-        fields = ('url', 'id', 'owner', 'title', 'created_at', 'state',
-                  'type', 'priority', 'responsible', 'articles')
-        read_only_fields = ('id', 'owner', 'created_at', 'articles')
+        fields = ('id', 'owner', 'title', 'created_at', 'state',
+                  'type', 'priority', 'responsible')
+        read_only_fields = ('id', 'owner', 'created_at')
 
 
-class HyperlinkedArticleSerializer(serializers.HyperlinkedModelSerializer):
+class ArticleSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
-    url = ArticleDetailHyperlink(view_name='tickets-article-detail', read_only=True)
-    ticket = serializers.HyperlinkedRelatedField(view_name='ticket-detail', read_only=True)
+    ticket = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = Article
-        fields = ('url', 'id', 'owner', 'subject',
+        fields = ('id', 'owner', 'subject',
                   'created_at', 'message', 'ticket')
         read_only_fields = ('id', 'owner', 'created_at', 'ticket')
 
 
 class CreateTicketSerializer(serializers.ModelSerializer):
-    article = HyperlinkedArticleSerializer(write_only=True)
+    article = ArticleSerializer(write_only=True)
 
     class Meta:
         model = Ticket
@@ -69,8 +40,7 @@ class CreateTicketSerializer(serializers.ModelSerializer):
         return ticket
 
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('url', 'id', 'username', 'first_name', 'last_name', 'email')
-        read_only_fields = ('id', 'url')
+        fields = ('id', 'username', 'first_name', 'last_name', 'email')
