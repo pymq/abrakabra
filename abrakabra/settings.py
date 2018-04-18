@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     'drf_yasg',
 
     'api.apps.ApiConfig',
+    'accounts.apps.AccountsConfig',
 ]
 
 MIDDLEWARE = [
@@ -120,7 +121,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-ACCOUNT_USERNAME_VALIDATORS = 'api.validators.custom_username_validators'
+ACCOUNT_USERNAME_VALIDATORS = 'accounts.validators.custom_username_validators'
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
@@ -156,7 +157,7 @@ SITE_ID = 1
 
 REST_SESSION_LOGIN = True
 ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
-ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_EMAIL_VERIFICATION = 'optional'
 ACCOUNT_LOGOUT_ON_GET = False
 ACCOUNT_USERNAME_BLACKLIST = []
 ACCOUNT_USERNAME_MIN_LENGTH = 3

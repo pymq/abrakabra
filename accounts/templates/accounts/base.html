@@ -1,0 +1,45 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>{% block title %}Grishanya.ga{% endblock %}</title>
+
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link href="https://fonts.googleapis.com/css?family=Peralta" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'accounts/css/accounts.css' %}">
+
+</head>
+<body>
+{% block body %}
+    <div class="container">
+        <h1 class="text-center logo my-4">Grishanya.ga</h1>
+        {% block content %}{% endblock %}
+    </div>
+{% endblock %}
+<script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script type="text/javascript">
+    var error_response = function (data) {
+        $('.api-response').html("API Response: " + data.status + ' ' + data.statusText + '<br/>Content: ' + data.responseText);
+    }
+    var susccess_response = function (data) {
+        $('.api-response').html("API Response: OK<br/>Content: " + JSON.stringify(data));
+    }
+    $().ready(function () {
+        $('form.ajax-post button[type=submit]').click(function () {
+            var form = $('form.ajax-post');
+            $.post(form.attr('action'), form.serialize())
+                .fail(function (data) {
+                    error_response(data);
+                })
+                .done(function (data) {
+                    susccess_response(data);
+                });
+            return false;
+        });
+    });
+</script>
+{% block script %}{% endblock %}
+</body>
