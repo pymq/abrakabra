@@ -1,6 +1,5 @@
 from django.conf.urls import url, include
 from . import views
-from rest_framework.urlpatterns import format_suffix_patterns
 from rest_framework.routers import DefaultRouter
 from rest_framework.schemas import get_schema_view
 
@@ -8,14 +7,9 @@ from rest_framework_extensions.routers import ExtendedSimpleRouter, NestedRouter
 
 schema_view = get_schema_view(title='Grishanya API')
 
-router = DefaultRouter()
-router.include_root_view = False
-router.register(r'users', views.UserViewSet)
-
 
 class NestedDefaultRouter(NestedRouterMixin, DefaultRouter):
     include_root_view = False
-    pass
 
 
 nested_router = NestedDefaultRouter()
@@ -27,7 +21,6 @@ nested_router = NestedDefaultRouter()
  )
 
 urlpatterns = [
-    url(r'^', include(router.urls)),
     url(r'^', include(nested_router.urls)),
     url(r'^schema/$', schema_view),
 ]

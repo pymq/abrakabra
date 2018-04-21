@@ -1,21 +1,12 @@
 from rest_framework import mixins, generics, status, viewsets
-from django.contrib.auth.models import User
-from .serializers import TicketSerializer, UserSerializer, ArticleSerializer, \
+from .serializers import TicketSerializer, ArticleSerializer, \
     CreateTicketSerializer
 from .permissions import IsOwner
 from rest_framework import permissions, filters
-from rest_framework.response import Response
-from rest_framework.decorators import detail_route, api_view
 from .models import Ticket, Article
 
 from rest_framework_extensions.mixins import NestedViewSetMixin
 from django_filters.rest_framework import DjangoFilterBackend
-
-
-class UserViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-    permission_classes = (permissions.IsAuthenticated,)
 
 
 class NestedArticleViewSet(NestedViewSetMixin, viewsets.ModelViewSet):

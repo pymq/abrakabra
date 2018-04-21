@@ -1,6 +1,5 @@
 from rest_framework import serializers, fields
 from .models import Ticket, Article
-from django.contrib.auth.models import User
 
 
 class TicketSerializer(serializers.ModelSerializer):
@@ -38,9 +37,3 @@ class CreateTicketSerializer(serializers.ModelSerializer):
         Article.objects.create(owner=validated_data.get('owner'), ticket=ticket,
                                **article_data)
         return ticket
-
-
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ('id', 'username', 'first_name', 'last_name', 'email')
