@@ -16,14 +16,14 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     url(r'^$', TemplateView.as_view(template_name='index.html')),
-    url(r'^admin/', admin.site.urls),
     url(r'^', include('accounts.urls')),
-    url(r'^api/auth/', include('rest_auth.urls')),
-    url(r'^api/auth/registration/', include('rest_auth.registration.urls')),
+    url(r'^api/', include('rest_auth.urls')),
     url(r'^api/', include('api.urls')),
+    url(r'^api/registration/', include('rest_auth.registration.urls')),
     url(r'^docs(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=None), name='schema-json'),
     url(r'^docs/$', schema_view.with_ui('swagger', cache_timeout=None), name='schema-swagger-ui'),
     url(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=None), name='schema-redoc'),
+    url(r'^admin/', admin.site.urls),
     url(r'^', include('rest_framework.urls')),
 
 ]
