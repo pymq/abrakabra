@@ -126,6 +126,10 @@ SITE_ID = 1
 
 # Auth
 
+REST_AUTH_SERIALIZERS = {
+    'USER_DETAILS_SERIALIZER': 'accounts.serializers.UserSerializer'
+}
+
 REST_SESSION_LOGIN = True
 ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
 ACCOUNT_EMAIL_VERIFICATION = 'optional'
