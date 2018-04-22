@@ -9,3 +9,4 @@ drf-extensions
 django-rest-auth[with_social]
 drf-yasg
 django-filter
+dry-rest-permissions

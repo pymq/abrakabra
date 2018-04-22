@@ -41,6 +41,8 @@ INSTALLED_APPS = [
 
     'drf_yasg',
 
+    'dry_rest_permissions',
+
     'api.apps.ApiConfig',
     'accounts.apps.AccountsConfig',
 ]

@@ -32,6 +32,20 @@ class Ticket(models.Model):
     def __str__(self):
         return self.title
 
+    @staticmethod
+    def has_read_permission(request):
+        return True
+
+    def has_object_read_permission(self, request):
+        return request.user == self.owner or request.user.groups.filter(name="Agents")
+
+    @staticmethod
+    def has_write_permission(request):
+        return True
+
+    def has_object_write_permission(self, request):
+        return request.user == self.owner or request.user.groups.filter(name="Agents")
+
 
 class Article(models.Model):
     subject = models.CharField(max_length=100)
@@ -42,3 +56,18 @@ class Article(models.Model):
 
     def __str__(self):
         return self.subject
+
+    @staticmethod
+    def has_read_permission(request):
+        return True
+
+    def has_object_read_permission(self, request):
+        return self.owner == request.user or self.ticket.owner.id == request.user.id or \
+               request.user.groups.filter(name="Agents")
+
+    @staticmethod
+    def has_write_permission(request):
+        return True
+
+    def has_object_write_permission(self, request):
+        return request.user == self.owner

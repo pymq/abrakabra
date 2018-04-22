@@ -1,15 +1,25 @@
-from rest_framework import serializers, fields
+from rest_framework import serializers
 from .models import Ticket, Article
 
 
-class TicketSerializer(serializers.ModelSerializer):
+class TicketSerializerCustomers(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
 
     class Meta:
         model = Ticket
         fields = ('id', 'owner', 'title', 'created_at', 'state',
                   'type', 'priority', 'responsible')
-        read_only_fields = ('id', 'owner', 'created_at')
+        read_only_fields = ('id', 'owner', 'created_at', 'type', 'priority', 'responsible')
+
+
+class TicketSerializerAgents(serializers.ModelSerializer):
+    owner = serializers.ReadOnlyField(source='owner.username')
+
+    class Meta:
+        model = Ticket
+        fields = ('id', 'owner', 'title', 'created_at', 'state',
+                  'type', 'priority', 'responsible')
+        read_only_fields = ('id', 'owner', 'created_at', 'responsible')
 
 
 class ArticleSerializer(serializers.ModelSerializer):
