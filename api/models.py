@@ -27,7 +27,7 @@ class Ticket(models.Model):
     priority = models.CharField(choices=PRIORITY_CHOICES, default='0', max_length=2)
     owner = models.ForeignKey(User, related_name='tickets', on_delete=models.CASCADE)
     responsible = models.ForeignKey(User, related_name='tickets_responsible_for',
-                                    on_delete=models.SET_NULL, null=True, default=None)  # TODO user groups
+                                    on_delete=models.SET_NULL, null=True, default=None)
 
     def __str__(self):
         return self.title
