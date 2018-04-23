@@ -52,6 +52,7 @@ class NestedTicketViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
             return serializers.TicketSerializerAgents
         if self.request.user.groups.filter(name="Customers"):
             return serializers.TicketSerializerCustomers
+        # return serializers.TicketSerializerCustomers
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user, )
